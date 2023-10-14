@@ -1,11 +1,20 @@
 const content = document.getElementById("contentwrap");
 let flashcards = {};
+let revtitle = "";
 
-function start () {
+
+
+function start (topicText) {
+    if (topicText.trim().length === 0) {
+        alert("Topic name can't be empty");
+        return;
+    }
+
     content.innerHTML = "";
+    revtitle = topicText;
 
     const startTitle = document.createElement("h1");
-    startTitle.textContent = `Add reverse flashcards!`;
+    startTitle.textContent = `${revtitle}: Add reverse flashcards!`;
     const flashTally = document.createElement("p");
     flashTally.innerHTML = `<span id="flashcardnum">${Object.keys(flashcards).length}</span> reverse flash card(s) so far.`;
     content.appendChild(startTitle);
@@ -72,6 +81,45 @@ function start () {
     }
 }
 
+
+
 function review () {
     content.innerHTML = "";
+
+    const revScrTitle = document.createElement("h1");
+    revScrTitle.textContent = `Review in ${revtitle}`;
+    const revScrTally = document.createElement("p");
+    revScrTally.innerHTML = `<span id="flashcardnum">${Object.keys(flashcards).length}</span> reverse flash card(s) left.`;
+    const flashDiv = document.createElement("div");
+
+    content.appendChild(revScrTitle);
+    content.appendChild(revScrTally);
+    content.appendChild(document.createElement("br"));
+    content.appendChild(flashDiv);
+
+    generateFlash();
+
+    function generateFlash() {
+        const randomizer = Math.floor(Math.random()*Object.keys(flashcards).length);
+        let flashcardPick = Object.keys(flashcards)[randomizer];
+
+        const flashcardName = document.createElement("h1");
+        flashcardName.textContent = `${flashcardPick}`;
+        const flashcardDef = document.createElement("p");
+        flashcardDef.textContent = `Your definition: ${Object.values(flashcards)[randomizer]}`;
+        const googler = document.createElement("a");
+        googler.setAttribute("target", "_blank");
+        googler.href = `https://www.google.com/search?q=${Object.keys(flashcards)[randomizer]}`
+        googler.textContent = `Google "${Object.keys(flashcards)[randomizer]}"`;
+        const googler2 = document.createElement("a");
+        googler2.setAttribute("target", "_blank");
+        googler2.href = `https://www.google.com/search?q=${Object.keys(flashcards)[randomizer]}%20${revtitle}`
+        googler2.textContent = `Google "${Object.keys(flashcards)[randomizer]} ${revtitle}"`;
+
+        flashDiv.appendChild(flashcardName);
+        flashDiv.appendChild(flashcardDef);
+        flashDiv.appendChild(googler);
+        flashDiv.appendChild(document.createElement("br"));
+        flashDiv.appendChild(googler2);
+    }
 }
