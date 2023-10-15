@@ -188,7 +188,6 @@ function review () {
 
             nextButton.disabled = false;
             changeButton.disabled = false;
-            okButton.disabled = false;
             flashcardDef.textContent = `${defBox.value}`;
         };
 
