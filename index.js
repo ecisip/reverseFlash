@@ -29,10 +29,10 @@ function start (topicText) {
     flashNamerLabel.textContent = `Input reverse flashcard`;
     const flashNamer = document.createElement("input");
     flashNamer.setAttribute("type", "text");
+
     const flashDefinerLabel = document.createElement("p");
     flashDefinerLabel.textContent = `Input the CORRECT definition`;
-    const flashDefiner = document.createElement("input");
-    flashDefiner.setAttribute("type", "text");
+    const flashDefiner = document.createElement("textarea");
     const flashNamerSubmit = document.createElement("button");
     flashNamerSubmit.setAttribute("type", "button");
     flashNamerSubmit.textContent = "Create reverse flash";
@@ -42,6 +42,7 @@ function start (topicText) {
     content.appendChild(flashNamer);
     content.appendChild(flashDefinerLabel);
     content.appendChild(flashDefiner);
+    content.appendChild(document.createElement("br"));
     content.appendChild(document.createElement("br"));
     content.appendChild(flashNamerSubmit);
 
@@ -54,9 +55,12 @@ function start (topicText) {
     content.appendChild(document.createElement("br"));
     content.appendChild(doneButton);
 
+    const flashPrevTxt = document.createElement("p");
+    flashPrevTxt.textContent = "Reverse flashcard(s) created:"
     const flashPrev = document.createElement("ul");
     content.appendChild(document.createElement("br"));
     content.appendChild(document.createElement("br"));
+    content.appendChild(flashPrevTxt);
     content.appendChild(flashPrev);
 
 
@@ -168,8 +172,7 @@ function review () {
 
         const defBoxLabel = document.createElement("p");
         defBoxLabel.textContent = `Change definition:`;
-        const defBox = document.createElement("input");
-        defBox.setAttribute("type", "text");
+        const defBox = document.createElement("textarea");
         defBox.value = Object.values(flashcards)[randomizer][1]; //cardDef
         const defBoxSubmit = document.createElement("button");
         defBoxSubmit.setAttribute("type", "button");
@@ -191,8 +194,8 @@ function review () {
         window.appendChild(document.createElement("br"));
         window.appendChild(defBoxLabel);
         window.appendChild(defBox);
-        window.appendChild(defBoxSubmit);
         window.appendChild(document.createElement("br"));
+        window.appendChild(defBoxSubmit);
     }
 
 
@@ -232,7 +235,7 @@ function congratsu () {
         const sumCardName = document.createElement("dt");
         sumCardName.textContent = `${card}`;
         const sumCardDef = document.createElement("dd");
-        sumCardDef.innerHTML = `Correct definition: ${flashbin[card][0]} </br> Your definition: ${flashbin[card][1]}`;
+        sumCardDef.innerHTML = `Correct definition: <span id="defTxt"> ${flashbin[card][0]} </span> </br> </br> Your definition: <span id="defTxt"> ${flashbin[card][1]} </span> </br> </br>`;
 
         sumCards.appendChild(sumCardName);
         sumCards.appendChild(sumCardDef);
