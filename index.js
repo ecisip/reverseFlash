@@ -29,13 +29,19 @@ function start (topicText) {
     flashNamerLabel.textContent = `Input reverse flashcard`;
     const flashNamer = document.createElement("input");
     flashNamer.setAttribute("type", "text");
+    const flashDefinerLabel = document.createElement("p");
+    flashDefinerLabel.textContent = `Input the CORRECT definition`;
+    const flashDefiner = document.createElement("input");
+    flashDefiner.setAttribute("type", "text");
     const flashNamerSubmit = document.createElement("button");
     flashNamerSubmit.setAttribute("type", "button");
     flashNamerSubmit.textContent = "Create reverse flash";
-    flashNamerSubmit.onclick = () => createFlash(flashNamer.value);
+    flashNamerSubmit.onclick = () => createFlash(flashNamer.value, flashDefiner.value);
     
     content.appendChild(flashNamerLabel);
     content.appendChild(flashNamer);
+    content.appendChild(flashDefinerLabel);
+    content.appendChild(flashDefiner);
     content.appendChild(document.createElement("br"));
     content.appendChild(flashNamerSubmit);
 
@@ -55,16 +61,19 @@ function start (topicText) {
 
 
 
-    function createFlash (flashName) {
+    function createFlash (flashName, flashDef) {
         if (flashName.trim().length === 0) {
             alert("Reverse flash card can't be empty");
+        } else if (flashDef.trim().length === 0) {
+            alert("Reverse flash card definition can't be empty");
         } else if (flashName in flashcards) {
             alert("Reverse flash already exists");
         } else {
-            flashcards[flashName] = "";
+            flashcards[flashName] = [flashDef, ""];
             let flashcardnum = document.getElementById("flashcardnum");
             flashcardnum.textContent = `${Object.keys(flashcards).length}`;
             flashNamer.value = "";
+            flashDefiner.value = "";
 
             const entryPrev = document.createElement("li");
             entryPrev.textContent = flashName;
@@ -117,7 +126,7 @@ function review () {
 
         const randomizer = Math.floor(Math.random()*Object.keys(flashcards).length);
         let cardName = Object.keys(flashcards)[randomizer];
-        let cardDef = Object.values(flashcards)[randomizer];
+        let cardDef = Object.values(flashcards)[randomizer][1];
 
         const flashcardName = document.createElement("h1");
         flashcardName.textContent = `${cardName}`;
@@ -145,18 +154,6 @@ function review () {
         flashDiv.appendChild(nextButton);
         flashDiv.appendChild(okButton);
         flashDiv.appendChild(document.createElement("br"));
-
-        const googler = document.createElement("a");
-        googler.setAttribute("target", "_blank");
-        googler.href = `https://www.google.com/search?q=${cardName}`
-        googler.textContent = `Google "${cardName}"`;
-        const googler2 = document.createElement("a");
-        googler2.setAttribute("target", "_blank");
-        googler2.href = `https://www.google.com/search?q=${cardName}%20${revtitle}`
-        googler2.textContent = `Google "${cardName} ${revtitle}"`;
-        flashDiv.appendChild(googler);
-        flashDiv.appendChild(document.createElement("br"));
-        flashDiv.appendChild(googler2);
     }
 
 
@@ -173,7 +170,7 @@ function review () {
         defBoxLabel.textContent = `Change definition:`;
         const defBox = document.createElement("input");
         defBox.setAttribute("type", "text");
-        defBox.value = Object.values(flashcards)[randomizer]; //cardDef
+        defBox.value = Object.values(flashcards)[randomizer][1]; //cardDef
         const defBoxSubmit = document.createElement("button");
         defBoxSubmit.setAttribute("type", "button");
         defBoxSubmit.textContent = "Update definition";
@@ -183,12 +180,12 @@ function review () {
                 return;
             }
 
-            flashcards[Object.keys(flashcards)[randomizer]] = defBox.value; //cardName
+            flashcards[Object.keys(flashcards)[randomizer]][1] = defBox.value; //cardName
             window.remove();
 
             nextButton.disabled = false;
             changeButton.disabled = false;
-            flashcardDef.textContent = `${defBox.value}`;
+            flashcardDef.textContent = `Your defnition: ${defBox.value}`;
         };
 
         window.appendChild(document.createElement("br"));
@@ -235,7 +232,7 @@ function congratsu () {
         const sumCardName = document.createElement("dt");
         sumCardName.textContent = `${card}`;
         const sumCardDef = document.createElement("dd");
-        sumCardDef.textContent = `${flashbin[card]}`;
+        sumCardDef.innerHTML = `Correct definition: ${flashbin[card][0]} </br> Your definition: ${flashbin[card][1]}`;
 
         sumCards.appendChild(sumCardName);
         sumCards.appendChild(sumCardDef);
@@ -246,6 +243,16 @@ function congratsu () {
     homeButton.textContent = "HOME (permanently deletes the flashcards)"
     homeButton.onclick = () => home();
     content.appendChild(homeButton);
+
+    const repeatButton = document.createElement("button");
+    repeatButton.setAttribute("type", "button");
+    repeatButton.textContent = "Review again?"
+    repeatButton.onclick = () => {
+        flashcards = flashbin;
+        flashbin = {};
+        review();
+    };
+    content.appendChild(repeatButton);
 }
 
 
