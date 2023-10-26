@@ -113,7 +113,7 @@ function review () {
     const revScrTitle = document.createElement("h1");
     revScrTitle.textContent = `Review in ${revtitle}`;
     const revScrTally = document.createElement("p");
-    revScrTally.innerHTML = `<span id="flashcardnum">${Object.keys(flashcards).length}</span> reverse flash card(s) left.`;
+    revScrTally.innerHTML = `<span id="flashcardleft">${Object.keys(flashcards).length}</span> reverse flash card(s) left.`;
     const flashDiv = document.createElement("div");
 
     content.appendChild(revScrTitle);
@@ -203,6 +203,9 @@ function review () {
     function ok (randomizer) {
         flashbin[Object.keys(flashcards)[randomizer]] = Object.values(flashcards)[randomizer];
         delete flashcards[Object.keys(flashcards)[randomizer]];
+
+        document.getElementById("flashcardleft").textContent = `${Object.keys(flashcards).length}`;
+
         if (Object.keys(flashcards).length !== 0) {
             generateFlash();
         } else {
